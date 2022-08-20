@@ -1,6 +1,8 @@
 import mcpadc from 'mcp-spi-adc';
 import { Server } from "socket.io";
 import http from 'http';
+import nodaryEncoder from 'nodary-encoder';
+import { Gpio } from 'onoff';
 
 const server = http.createServer();
 const io = new Server(server, {
@@ -64,4 +66,24 @@ const volumePod = mcpadc.open(0, { speedHz: 1000 }, err => {
       }
     });
   }, 100);
+});
+
+// ENCODER
+const myEncoder = nodaryEncoder(17, 18); // Using GPIO17 & GPIO18
+myEncoder.on('rotation', (direction, value) => {
+  if (direction == 'R') {
+    console.log('Encoder rotated right');
+  } else {
+    console.log('Encoder rotated left');
+  }
+
+  console.log('Value is', value);
+});
+
+// Encoder button on GPIO04
+const button = new Gpio(4, 'in', 'falling', { debounceTimeout: 10 });
+button.watch((err, value) => {
+  if (err) throw err;
+  console.log('Button pressed');
+  io.sockets.emit('button-pressed');
 });

@@ -1,11 +1,11 @@
 <script>
   import { io } from "socket.io-client";
-  const socket = io("http://192.168.50.8:3001", {
+  const socket = io("http://media.local:3001", {
     withCredentials: false,
     credentials: "include",
     crossDomain: true,
     headers: {
-      "Origin": "http://192.168.50.8:3000",
+      "Origin": "http://media.local:3000",
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Credentials": true
     }

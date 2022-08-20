@@ -11,7 +11,7 @@ const createWindow = () => {
   });
   
   if (process.env.NODE_ENV !== 'development') {
-    require('./backend/main.js')
+    // require('./backend/main.js')
     mainWindow.loadFile(path.join(__dirname, "client/dist/index.html"));
   } else {
     console.log('Development mode')
