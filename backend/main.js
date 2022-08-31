@@ -72,18 +72,74 @@ const volumePod = mcpadc.open(0, { speedHz: 1000 }, err => {
 const myEncoder = nodaryEncoder(17, 18); // Using GPIO17 & GPIO18
 myEncoder.on('rotation', (direction, value) => {
   if (direction == 'R') {
-    console.log('Encoder rotated right');
+    console.log('Encoder rotated right', value);
   } else {
-    console.log('Encoder rotated left');
+    console.log('Encoder rotated left', value);
   }
-
-  console.log('Value is', value);
 });
+myEncoder.on('error', err => {
+  console.log(err);
+})
 
 // Encoder button on GPIO04
-const button = new Gpio(4, 'in', 'falling', { debounceTimeout: 10 });
-button.watch((err, value) => {
+const encoderButton = new Gpio(4, 'in', 'falling', { debounceTimeout: 10 });
+encoderButton.watch((err, value) => {
   if (err) throw err;
-  console.log('Button pressed');
-  io.sockets.emit('button-pressed');
+  console.log('encoderButton');
+  io.sockets.emit('encoderButton');
+});
+
+const ButtenA = new Gpio(24, 'in', 'rising', { debounceTimeout: 10 });
+ButtenA.watch((err, value) => {
+  if (err) throw err;
+  console.log('ButtenA');
+  io.sockets.emit('ButtenA');
+});
+
+const ButtenB = new Gpio(23, 'in', 'rising', { debounceTimeout: 10 });
+ButtenB.watch((err, value) => {
+  if (err) throw err;
+  console.log('ButtenB');
+  io.sockets.emit('ButtenB');
+})
+
+const ButtenC = new Gpio(27, 'in', 'rising', { debounceTimeout: 10 });
+ButtenC.watch((err, value) => {
+  if (err) throw err;
+  console.log('ButtenC');
+  io.sockets.emit('ButtenC');
+})
+
+const ButtenD = new Gpio(22, 'in', 'rising', { debounceTimeout: 10 });
+ButtenD.watch((err, value) => {
+  if (err) throw err;
+  console.log('ButtenD');
+  io.sockets.emit('ButtenD');
+})
+
+const ButtenE = new Gpio(14, 'in', 'rising', { debounceTimeout: 10 });
+ButtenE.watch((err, value) => {
+  if (err) throw err;
+  console.log('ButtenE');
+  io.sockets.emit('ButtenE');
+})
+
+const ButtenF = new Gpio(15, 'in', 'rising', { debounceTimeout: 10 });
+ButtenF.watch((err, value) => {
+  if (err) throw err;
+  console.log('ButtenF');
+  io.sockets.emit('ButtenF');
+})
+
+process.on('SIGINT', _ => {
+  new Gpio(17, 'in', 'falling').unexport();
+  new Gpio(18, 'in', 'falling').unexport();
+  encoderButton.unexport();
+  ButtenA.unexport();
+  ButtenB.unexport();
+  ButtenC.unexport();
+  ButtenD.unexport();
+  ButtenE.unexport();
+  ButtenF.unexport();
+  process.exit();
 });
